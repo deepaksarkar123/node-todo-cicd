@@ -89,15 +89,18 @@
     </head>
 
     <body>
+        <html>
+    <body>
         <h1>Hello Mindsprint!</h1>
+        <!--
         <ul>
-            <% todolist.forEach(function(todo, index) { %>
+            <%# todolist.forEach(function(todo, index) { %>
             <li>
                 <a href="/todo/delete/<%= index %>" class="delete-btn">✘</a>
                 <a href="/todo/<%= index %>" class="edit-btn">✎</a>
                 <%- todo %>
             </li>
-            <% }); %>
+            <%# }); %>
         </ul>
 
         <form action="/todo/add/" method="post">
@@ -107,5 +110,6 @@
                 <input type="submit" value="Add" />
             </p>
         </form>
+        -->
     </body>
 </html>
