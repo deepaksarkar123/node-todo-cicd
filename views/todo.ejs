@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My ToDo App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f0f0f0;
             color: #333;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
         h1 {
@@ -19,29 +26,38 @@
             text-align: center;
         }
 
+        .container {
+            width: 400px;
+            background-color: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 20px;
+        }
+
         ul {
             list-style: none;
             padding: 0;
         }
 
-        ul li {
-            background: #fff;
+        li {
+            background: #f9f9f9;
             border: 1px solid #ddd;
             margin-bottom: 10px;
             padding: 10px;
-            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        ul li a {
+        li a {
             color: #333;
             text-decoration: none;
             font-weight: bold;
+            margin-left: 10px;
+            cursor: pointer;
         }
 
-        ul li a:hover {
+        li a:hover {
             color: #007BFF;
         }
 
@@ -54,8 +70,6 @@
         }
 
         form {
-            background: #fff;
-            padding: 20px;
             margin-top: 20px;
         }
 
@@ -86,26 +100,26 @@
 </head>
 <body>
     <h1>Welcome to My ToDo App</h1>
-    <ul>
-        <% todolist.forEach(function(todo, index) { %>
-        <li>
-            <div>
-                <%- todo %>
-            </div>
-            <div>
-                <a href="/todo/delete/<%= index %>" class="delete-btn">✘</a>
-                <a href="/todo/<%= index %>" class="edit-btn">✎</a>
-            </div>
-        </li>
-        <% }); %>
-    </ul>
+    <div class="container">
+        <ul>
+            <% todolist.forEach(function(todo, index) { %>
+            <li>
+                <div>
+                    <%- todo %>
+                </div>
+                <div>
+                    <a href="/todo/delete/<%= index %>" class="delete-btn">✘ Delete</a>
+                    <a href="/todo/edit/<%= index %>" class="edit-btn">✎ Edit</a>
+                </div>
+            </li>
+            <% }); %>
+        </ul>
 
-    <form action="/todo/add/" method="post">
-        <p>
+        <form action="/todo/add/" method="post">
             <label for="newtodo">Add a New ToDo:</label>
             <input type="text" name="newtodo" id="newtodo" autofocus />
             <input type="submit" value="Add" />
-        </p>
-    </form>
+        </form>
+    </div>
 </body>
 </html>
