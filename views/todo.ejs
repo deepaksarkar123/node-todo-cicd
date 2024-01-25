@@ -44,6 +44,11 @@
             align-items: center;
         }
 
+        li.completed {
+            background: #d4edda;
+            border-color: #c3e6cb;
+        }
+
         li a {
             color: #333;
             text-decoration: none;
@@ -61,6 +66,10 @@
 
         .edit-btn {
             color: #FFC107;
+        }
+
+        .complete-btn {
+            color: #28a745;
         }
 
         form {
@@ -101,11 +110,14 @@
         <h2>Tasks</h2>
         <ul>
             <% todolist.forEach(function(todo, index) { %>
-            <li>
+            <li class="<%= todo.completed ? 'completed' : '' %>">
                 <div>
-                    <%- todo %>
+                    <span><%- todo.task %></span>
                 </div>
                 <div>
+                    <% if (!todo.completed) { %>
+                        <a href="/todo/complete/<%= index %>" class="complete-btn">✓ Complete</a>
+                    <% } %>
                     <a href="/todo/delete/<%= index %>" class="delete-btn">✘ Delete</a>
                     <a href="/todo/edit/<%= index %>" class="edit-btn">✎ Edit</a>
                 </div>
