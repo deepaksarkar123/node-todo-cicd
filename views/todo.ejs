@@ -108,7 +108,7 @@
     <h1>My ToDo App</h1>
     <div class="container">
         <h2>Tasks</h2>
-        <ul>
+        <ul id="taskList">
             <% todolist.forEach(function(todo, index) { %>
             <li class="<%= todo.completed ? 'completed' : '' %>">
                 <div>
@@ -126,11 +126,41 @@
         </ul>
 
         <h2>Add a New Task</h2>
-        <form action="/todo/add/" method="post">
+        <form action="/todo/add/" method="post" id="addTaskForm">
             <label for="newtodo">Task:</label>
             <input type="text" name="newtodo" id="newtodo" autofocus />
             <input type="submit" value="Add Task" />
         </form>
     </div>
+
+    <script>
+        // JavaScript to update task list when a new task is added
+        const addTaskForm = document.getElementById("addTaskForm");
+        const taskList = document.getElementById("taskList");
+
+        addTaskForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+            const taskText = document.getElementById("newtodo").value;
+
+            // Create a new task element and add it to the list
+            const li = document.createElement("li");
+            li.classList.add("completed"); // You can change this if new tasks should start as incomplete
+            li.innerHTML = `
+                <div>
+                    <span>${taskText}</span>
+                </div>
+                <div>
+                    <a href="#" class="complete-btn">✓ Complete</a>
+                    <a href="#" class="delete-btn">✘ Delete</a>
+                    <a href="#" class="edit-btn">✎ Edit</a>
+                </div>
+            `;
+
+            taskList.appendChild(li);
+
+            // Clear the input field
+            document.getElementById("newtodo").value = "";
+        });
+    </script>
 </body>
 </html>
