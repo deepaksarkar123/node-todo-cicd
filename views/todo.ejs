@@ -54,6 +54,7 @@
             text-decoration: none;
             font-weight: bold;
             margin-left: 10px;
+            cursor: pointer;
         }
 
         li a:hover {
@@ -116,10 +117,10 @@
                 </div>
                 <div>
                     <% if (!todo.completed) { %>
-                        <a href="/todo/complete/<%= index %>" class="complete-btn">✓ Complete</a>
+                        <a href="#" class="complete-btn" onclick="markAsCompleted(<%= index %>)">✓ Complete</a>
                     <% } %>
-                    <a href="/todo/delete/<%= index %>" class="delete-btn">✘ Delete</a>
-                    <a href="/todo/edit/<%= index %>" class="edit-btn">✎ Edit</a>
+                    <a href="#" class="delete-btn" onclick="deleteTask(<%= index %>)">✘ Delete</a>
+                    <a href="#" class="edit-btn" onclick="editTask(<%= index %>)">✎ Edit</a>
                 </div>
             </li>
             <% }); %>
@@ -134,33 +135,54 @@
     </div>
 
     <script>
-        // JavaScript to update task list when a new task is added
+        // JavaScript to handle task actions
         const addTaskForm = document.getElementById("addTaskForm");
         const taskList = document.getElementById("taskList");
 
         addTaskForm.addEventListener("submit", function(event) {
             event.preventDefault();
-            const taskText = document.getElementById("newtodo").value;
+            const taskText = document.getElementById("newtodo").value.trim();
 
-            // Create a new task element and add it to the list
-            const li = document.createElement("li");
-            li.classList.add("completed"); // You can change this if new tasks should start as incomplete
-            li.innerHTML = `
-                <div>
-                    <span>${taskText}</span>
-                </div>
-                <div>
-                    <a href="#" class="complete-btn">✓ Complete</a>
-                    <a href="#" class="delete-btn">✘ Delete</a>
-                    <a href="#" class="edit-btn">✎ Edit</a>
-                </div>
-            `;
+            if (taskText !== "") {
+                // Create a new task element and add it to the list
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <div>
+                        <span>${taskText}</span>
+                    </div>
+                    <div>
+                        <a href="#" class="complete-btn" onclick="markAsCompleted(this)">✓ Complete</a>
+                        <a href="#" class="delete-btn" onclick="deleteTask(this)">✘ Delete</a>
+                        <a href="#" class="edit-btn" onclick="editTask(this)">✎ Edit</a>
+                    </div>
+                `;
 
-            taskList.appendChild(li);
+                taskList.appendChild(li);
 
-            // Clear the input field
-            document.getElementById("newtodo").value = "";
+                // Clear the input field
+                document.getElementById("newtodo").value = "";
+            }
         });
+
+        function markAsCompleted(link) {
+            const listItem = link.parentElement.parentElement;
+            listItem.classList.toggle("completed");
+        }
+
+        function deleteTask(link) {
+            const listItem = link.parentElement.parentElement;
+            listItem.remove();
+        }
+
+        function editTask(link) {
+            const listItem = link.parentElement.parentElement;
+            const taskText = listItem.querySelector("span").textContent;
+            const newTaskText = prompt("Edit Task:", taskText);
+
+            if (newTaskText !== null) {
+                listItem.querySelector("span").textContent = newTaskText;
+            }
+        }
     </script>
 </body>
 </html>
