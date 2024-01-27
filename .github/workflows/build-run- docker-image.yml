@@ -1,0 +1,36 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Copy repository to AWS EC2
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+        SOURCE: "."
+        REMOTE_HOST: ${{ secrets.EC2_HOST }}
+        REMOTE_USER: ${{ secrets.EC2_USERNAME }}
+        TARGET: ${{ secrets.REMOTE_DIRECTORY }}
+
+    - name: Build and run Docker image on EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd ${{ secrets.REMOTE_DIRECTORY }}
+          docker build -t my-nodejs-app .
+          docker stop my-container || true
+          docker rm my-container || true
+          docker run -d --name my-container -p 8001:8001 my-nodejs-app
