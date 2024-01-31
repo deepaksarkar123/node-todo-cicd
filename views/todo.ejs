@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My ToDo App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            color: #333;
             margin: 0;
             padding: 0;
         }
@@ -20,43 +19,29 @@
             text-align: center;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
         ul {
             list-style: none;
             padding: 0;
         }
 
-        li {
-            background: #f9f9f9;
+        ul li {
+            background: #fff;
             border: 1px solid #ddd;
             margin-bottom: 10px;
-            padding: 15px;
+            padding: 10px;
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        li.completed {
-            background: #d4edda;
-            border-color: #c3e6cb;
-        }
-
-        li a {
+        ul li a {
             color: #333;
             text-decoration: none;
             font-weight: bold;
-            cursor: pointer;
         }
 
-        li a:hover {
+        ul li a:hover {
             color: #007BFF;
         }
 
@@ -68,26 +53,22 @@
             color: #FFC107;
         }
 
-        .complete-btn {
-            color: #28a745;
-        }
-
         form {
+            background: #fff;
+            padding: 20px;
             margin-top: 20px;
-            display: flex;
-            align-items: center;
         }
 
         label {
-            font-weight: bold;
-            margin-right: 10px;
+            display: block;
+            margin-bottom: 10px;
         }
 
         input[type="text"] {
-            flex: 1;
+            width: 100%;
             padding: 10px;
+            margin-bottom: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
         }
 
         input[type="submit"] {
@@ -95,7 +76,6 @@
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 4px;
             cursor: pointer;
         }
 
@@ -105,79 +85,27 @@
     </style>
 </head>
 <body>
-    <h1>My ToDo Application</h1>
-    <div class="container">
-        <h2>Tasks</h2>
-        <ul id="taskList">
-            <!-- Tasks will be displayed here -->
-        </ul>
+    <h1>Welcome to My ToDo App</h1>
+    <ul>
+        <% todolist.forEach(function(todo, index) { %>
+        <li>
+            <div>
+                <%- todo %>
+            </div>
+            <div>
+                <a href="/todo/delete/<%= index %>" class="delete-btn">✘</a>
+                <a href="/todo/<%= index %>" class="edit-btn">✎</a>
+            </div>
+        </li>
+        <% }); %>
+    </ul>
 
-        <h2>Add a New Task</h2>
-        <form id="addTaskForm">
-            <label for="newtodo">Task:</label>
+    <form action="/todo/add/" method="post">
+        <p>
+            <label for="newtodo">Add a New ToDo:</label>
             <input type="text" name="newtodo" id="newtodo" autofocus />
-            <input type="submit" value="Add Task" />
-        </form>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const taskList = document.getElementById("taskList");
-            const addTaskForm = document.getElementById("addTaskForm");
-
-            // Function to add a new task to the list
-            function addTask(taskText, completed = false) {
-                const li = document.createElement("li");
-                li.classList.add(completed ? 'completed' : '');
-                li.innerHTML = `
-                    <div>
-                        <span>${taskText}</span>
-                    </div>
-                    <div>
-                        ${!completed ? '<a href="#" class="complete-btn">✓ Complete</a>' : ''}
-                        <a href="#" class="delete-btn">✘ Delete</a>
-                        <a href="#" class="edit-btn">✎ Edit</a>
-                    </div>
-                `;
-                taskList.appendChild(li);
-            }
-
-            // Event listener for adding a new task
-            addTaskForm.addEventListener("submit", function (event) {
-                event.preventDefault(); // Prevent form submission
-
-                const newTaskInput = document.getElementById("newtodo");
-                const newTaskText = newTaskInput.value.trim();
-
-                if (newTaskText !== '') {
-                    addTask(newTaskText);
-                    newTaskInput.value = ''; // Clear the input field
-                }
-            });
-
-            // Event delegation for handling task list actions
-            taskList.addEventListener("click", function (event) {
-                if (event.target.matches(".complete-btn")) {
-                    const listItem = event.target.closest("li");
-                    listItem.classList.toggle('completed');
-                } else if (event.target.matches(".delete-btn")) {
-                    const listItem = event.target.closest("li");
-                    listItem.remove();
-                } else if (event.target.matches(".edit-btn")) {
-                    const listItem = event.target.closest("li");
-                    const taskText = listItem.querySelector("span").textContent;
-                    const newTaskText = prompt("Edit Task:", taskText);
-
-                    if (newTaskText !== null && newTaskText.trim() !== '') {
-                        listItem.querySelector("span").textContent = newTaskText;
-                    }
-                }
-            });
-
-            // Example tasks
-            addTask("Sample Task 1");
-            addTask("Sample Task 2", true);
-        });
-    </script>
+            <input type="submit" value="Add" />
+        </p>
+    </form>
 </body>
 </html>
