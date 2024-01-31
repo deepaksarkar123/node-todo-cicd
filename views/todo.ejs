@@ -46,6 +46,11 @@
             align-items: center;
         }
 
+        li.completed {
+            background: #d4edda;
+            border-color: #c3e6cb;
+        }
+
         li a {
             color: #333;
             text-decoration: none;
@@ -62,6 +67,10 @@
 
         .edit-btn {
             color: #FFC107;
+        }
+
+        .complete-btn {
+            color: #28a745;
         }
 
         form {
@@ -139,6 +148,7 @@
                     ${taskText}
                 </div>
                 <div>
+                    <a href="#" class="complete-btn">✓</a>
                     <a href="#" class="delete-btn">✘</a>
                     <a href="#" class="edit-btn">✎</a>
                 </div>
@@ -160,7 +170,10 @@
 
         // Event delegation for handling task list actions
         taskList.addEventListener("click", function (event) {
-            if (event.target.matches(".delete-btn")) {
+            if (event.target.matches(".complete-btn")) {
+                const listItem = event.target.closest("li");
+                listItem.classList.toggle('completed');
+            } else if (event.target.matches(".delete-btn")) {
                 const listItem = event.target.closest("li");
                 listItem.remove();
             } else if (event.target.matches(".edit-btn")) {
@@ -186,9 +199,6 @@
             recognition.start();
         });
 
-        // Example tasks
-        addTask("Sample Task 1");
-        addTask("Sample Task 2");
     </script>
 </body>
 </html>
