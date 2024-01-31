@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern ToDo Application</title>
+    <title>Modern ToDo Application with Speech Recognition</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -55,12 +55,24 @@
             color: green;
             cursor: pointer;
         }
+        .speech-btn {
+            display: block;
+            margin: 10px auto;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>ToDo List</h1>
         <input type="text" id="newTodo" class="todo-input" placeholder="Add a new task...">
+        <button id="startSpeech" class="speech-btn">Add Task By Voice</button>
         <ul id="todoList" class="todo-list"></ul>
     </div>
 
@@ -68,6 +80,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const addTodoInput = document.getElementById('newTodo');
             const todoList = document.getElementById('todoList');
+            const startSpeechBtn = document.getElementById('startSpeech');
 
             addTodoInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && this.value.trim() !== '') {
@@ -96,6 +109,34 @@
                     </span>`;
                 todoList.appendChild(li);
             }
+
+            // Speech Recognition
+            startSpeechBtn.addEventListener('click', function() {
+                if ('webkitSpeechRecognition' in window) {
+                    var speechRecognizer = new webkitSpeechRecognition();
+                    speechRecognizer.continuous = false;
+                    speechRecognizer.interimResults = true;
+                    speechRecognizer.lang = 'en-US';
+                    speechRecognizer.start();
+
+                    speechRecognizer.onresult = function(event) {
+                        var finalTranscripts = '';
+                        for (var i = event.resultIndex; i < event.results.length; i++) {
+                            if (event.results[i].isFinal) {
+                                finalTranscripts += event.results[i][0].transcript;
+                            }
+                        }
+                        addTodoInput.value = finalTranscripts;
+                        addTodo(finalTranscripts);
+                    };
+
+                    speechRecognizer.onerror = function (event) {
+                        console.log('Error occurred in recognition: ' + event.error);
+                    }
+                } else {
+                    alert("Your browser does not support speech recognition.");
+                }
+            });
         });
     </script>
 </body>
