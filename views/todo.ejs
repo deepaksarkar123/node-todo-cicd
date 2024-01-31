@@ -1,143 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern ToDo Application with Speech Recognition</title>
+    <title>My ToDo App</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
             padding: 0;
         }
-        .container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+
         h1 {
-            color: #007BFF;
+            background-color: #007BFF;
+            color: white;
+            margin: 0;
+            padding: 20px;
             text-align: center;
         }
-        .todo-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            box-sizing: border-box;
-        }
-        .todo-list {
+
+        ul {
             list-style: none;
             padding: 0;
         }
-        .todo-item {
+
+        ul li {
             background: #fff;
             border: 1px solid #ddd;
             margin-bottom: 10px;
             padding: 10px;
+            position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .todo-item.completed {
-            text-decoration: line-through;
-            color: #aaa;
+
+        ul li a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
         }
+
+        ul li a:hover {
+            color: #007BFF;
+        }
+
         .delete-btn {
             color: red;
-            cursor: pointer;
         }
-        .complete-btn {
-            color: green;
-            cursor: pointer;
+
+        .edit-btn {
+            color: #FFC107;
         }
-        .speech-btn {
+
+        form {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        label {
             display: block;
-            margin: 10px auto;
-            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+        }
+
+        input[type="submit"] {
             background-color: #007BFF;
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>ToDo List</h1>
-        <input type="text" id="newTodo" class="todo-input" placeholder="Add a new task...">
-        <button id="startSpeech" class="speech-btn">Add Task By Voice</button>
-        <ul id="todoList" class="todo-list"></ul>
-    </div>
+    <h1>Welcome to My ToDo App</h1>
+    <ul>
+        <% todolist.forEach(function(todo, index) { %>
+        <li>
+            <div>
+                <%- todo %>
+            </div>
+            <div>
+                <a href="/todo/delete/<%= index %>" class="delete-btn">✘</a>
+                <a href="/todo/<%= index %>" class="edit-btn">✎</a>
+            </div>
+        </li>
+        <% }); %>
+    </ul>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addTodoInput = document.getElementById('newTodo');
-            const todoList = document.getElementById('todoList');
-            const startSpeechBtn = document.getElementById('startSpeech');
-
-            addTodoInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && this.value.trim() !== '') {
-                    const newTodo = this.value.trim();
-                    addTodo(newTodo);
-                    this.value = '';
-                }
-            });
-
-            todoList.addEventListener('click', function(e) {
-                if (e.target.className === 'delete-btn') {
-                    e.target.parentElement.remove();
-                } else if (e.target.className === 'complete-btn') {
-                    e.target.parentElement.classList.toggle('completed');
-                }
-            });
-
-            function addTodo(todo) {
-                const li = document.createElement('li');
-                li.className = 'todo-item';
-                li.innerHTML = `
-                    <span>${todo}</span>
-                    <span>
-                        <span class="complete-btn">✔</span>
-                        <span class="delete-btn">✘</span>
-                    </span>`;
-                todoList.appendChild(li);
-            }
-
-            // Speech Recognition
-            startSpeechBtn.addEventListener('click', function() {
-                if ('webkitSpeechRecognition' in window) {
-                    var speechRecognizer = new webkitSpeechRecognition();
-                    speechRecognizer.continuous = false;
-                    speechRecognizer.interimResults = true;
-                    speechRecognizer.lang = 'en-US';
-                    speechRecognizer.start();
-
-                    speechRecognizer.onresult = function(event) {
-                        var finalTranscripts = '';
-                        for (var i = event.resultIndex; i < event.results.length; i++) {
-                            if (event.results[i].isFinal) {
-                                finalTranscripts += event.results[i][0].transcript;
-                            }
-                        }
-                        addTodoInput.value = finalTranscripts;
-                        addTodo(finalTranscripts);
-                    };
-
-                    speechRecognizer.onerror = function (event) {
-                        console.log('Error occurred in recognition: ' + event.error);
-                    }
-                } else {
-                    alert("Your browser does not support speech recognition.");
-                }
-            });
-        });
-    </script>
+    <form action="/todo/add/" method="post">
+        <p>
+            <label for="newtodo">Add a New ToDo:</label>
+            <input type="text" name="newtodo" id="newtodo" autofocus />
+            <input type="submit" value="Add" />
+        </p>
+    </form>
 </body>
 </html>
