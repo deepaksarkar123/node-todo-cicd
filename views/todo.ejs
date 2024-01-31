@@ -1,111 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>My ToDo App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            background-color: #007BFF;
-            color: white;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        ul li {
-            background: #fff;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            padding: 10px;
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        ul li a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        ul li a:hover {
-            color: #007BFF;
-        }
-
-        .delete-btn {
-            color: red;
-        }
-
-        .edit-btn {
-            color: #FFC107;
-        }
-
-        form {
-            background: #fff;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-        }
-
-        input[type="submit"] {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Simple ToDo App</title>
 </head>
 <body>
-    <h1>Welcome to My ToDo App</h1>
-    <ul>
-        <% todolist.forEach(function(todo, index) { %>
-        <li>
-            <div>
-                <%- todo %>
-            </div>
-            <div>
-                <a href="/todo/delete/<%= index %>" class="delete-btn">✘</a>
-                <a href="/todo/<%= index %>" class="edit-btn">✎</a>
-            </div>
-        </li>
-        <% }); %>
-    </ul>
+    <h1>ToDo List</h1>
+    <input type="text" id="newTask" placeholder="Add new task">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
 
-    <form action="/todo/add/" method="post">
-        <p>
-            <label for="newtodo">Add a New ToDo:</label>
-            <input type="text" name="newtodo" id="newtodo" autofocus />
-            <input type="submit" value="Add" />
-        </p>
-    </form>
+    <script>
+        function addTask() {
+            var task = document.getElementById("newTask").value;
+            if (task.trim() === "") {
+                alert("Task cannot be empty!");
+                return;
+            }
+
+            var list = document.getElementById("taskList");
+            var listItem = document.createElement("li");
+
+            listItem.textContent = task;
+            list.appendChild(listItem);
+
+            document.getElementById("newTask").value = ""; // Clear input field after adding
+        }
+
+        document.getElementById("newTask").addEventListener("keypress", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.key === "Enter") {
+                // Trigger the button element with a click
+                addTask();
+            }
+        });
+    </script>
 </body>
 </html>
