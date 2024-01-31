@@ -121,61 +121,63 @@
     </div>
 
     <script>
-        const taskList = document.getElementById("taskList");
-        const addTaskForm = document.getElementById("addTaskForm");
+        document.addEventListener("DOMContentLoaded", function () {
+            const taskList = document.getElementById("taskList");
+            const addTaskForm = document.getElementById("addTaskForm");
 
-        // Function to add a new task to the list
-        function addTask(taskText, completed = false) {
-            const li = document.createElement("li");
-            li.classList.add(completed ? 'completed' : '');
-            li.innerHTML = `
-                <div>
-                    <span>${taskText}</span>
-                </div>
-                <div>
-                    ${!completed ? '<a href="#" class="complete-btn">✓ Complete</a>' : ''}
-                    <a href="#" class="delete-btn">✘ Delete</a>
-                    <a href="#" class="edit-btn">✎ Edit</a>
-                </div>
-            `;
-            taskList.appendChild(li);
-        }
-
-        // Event listener for adding a new task
-        addTaskForm.addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent form submission
-
-            const newTaskInput = document.getElementById("newtodo");
-            const newTaskText = newTaskInput.value.trim();
-
-            if (newTaskText !== '') {
-                addTask(newTaskText);
-                newTaskInput.value = ''; // Clear the input field
+            // Function to add a new task to the list
+            function addTask(taskText, completed = false) {
+                const li = document.createElement("li");
+                li.classList.add(completed ? 'completed' : '');
+                li.innerHTML = `
+                    <div>
+                        <span>${taskText}</span>
+                    </div>
+                    <div>
+                        ${!completed ? '<a href="#" class="complete-btn">✓ Complete</a>' : ''}
+                        <a href="#" class="delete-btn">✘ Delete</a>
+                        <a href="#" class="edit-btn">✎ Edit</a>
+                    </div>
+                `;
+                taskList.appendChild(li);
             }
-        });
 
-        // Event delegation for handling task list actions
-        taskList.addEventListener("click", function(event) {
-            if (event.target.matches(".complete-btn")) {
-                const listItem = event.target.closest("li");
-                listItem.classList.toggle('completed');
-            } else if (event.target.matches(".delete-btn")) {
-                const listItem = event.target.closest("li");
-                listItem.remove();
-            } else if (event.target.matches(".edit-btn")) {
-                const listItem = event.target.closest("li");
-                const taskText = listItem.querySelector("span").textContent;
-                const newTaskText = prompt("Edit Task:", taskText);
+            // Event listener for adding a new task
+            addTaskForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // Prevent form submission
 
-                if (newTaskText !== null && newTaskText.trim() !== '') {
-                    listItem.querySelector("span").textContent = newTaskText;
+                const newTaskInput = document.getElementById("newtodo");
+                const newTaskText = newTaskInput.value.trim();
+
+                if (newTaskText !== '') {
+                    addTask(newTaskText);
+                    newTaskInput.value = ''; // Clear the input field
                 }
-            }
-        });
+            });
 
-        // Example tasks
-        addTask("Sample Task 1");
-        addTask("Sample Task 2", true);
+            // Event delegation for handling task list actions
+            taskList.addEventListener("click", function (event) {
+                if (event.target.matches(".complete-btn")) {
+                    const listItem = event.target.closest("li");
+                    listItem.classList.toggle('completed');
+                } else if (event.target.matches(".delete-btn")) {
+                    const listItem = event.target.closest("li");
+                    listItem.remove();
+                } else if (event.target.matches(".edit-btn")) {
+                    const listItem = event.target.closest("li");
+                    const taskText = listItem.querySelector("span").textContent;
+                    const newTaskText = prompt("Edit Task:", taskText);
+
+                    if (newTaskText !== null && newTaskText.trim() !== '') {
+                        listItem.querySelector("span").textContent = newTaskText;
+                    }
+                }
+            });
+
+            // Example tasks
+            addTask("Sample Task 1");
+            addTask("Sample Task 2", true);
+        });
     </script>
 </body>
 </html>
