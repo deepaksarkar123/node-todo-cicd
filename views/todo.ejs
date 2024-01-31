@@ -109,7 +109,7 @@
     <div class="container">
         <h2>Tasks</h2>
         <ul id="taskList">
-            <!-- Your tasks will be displayed here -->
+            <!-- Tasks will be displayed here -->
         </ul>
 
         <h2>Add a New Task</h2>
@@ -122,6 +122,7 @@
 
     <script>
         const taskList = document.getElementById("taskList");
+        const addTaskForm = document.getElementById("addTaskForm");
 
         // Function to add a new task to the list
         function addTask(taskText, completed = false) {
@@ -141,7 +142,7 @@
         }
 
         // Event listener for adding a new task
-        document.getElementById("addTaskForm").addEventListener("submit", function(event) {
+        addTaskForm.addEventListener("submit", function(event) {
             event.preventDefault(); // Prevent form submission
 
             const newTaskInput = document.getElementById("newtodo");
