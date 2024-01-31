@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My ToDo App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern ToDo Application</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
         }
-
-        h1 {
-            background-color: #28a745;
-            color: white;
-            margin: 0;
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
             padding: 20px;
-            text-align: center;
+            background-color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        ul {
+        h1 {
+            color: #007BFF;
+            text-align: center;
+        }
+        .todo-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .todo-list {
             list-style: none;
             padding: 0;
-            max-width: 600px;
-            margin: auto;
         }
-
-        ul li {
+        .todo-item {
             background: #fff;
             border: 1px solid #ddd;
             margin-bottom: 10px;
@@ -36,95 +42,61 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
         }
-
-        ul li.completed {
+        .todo-item.completed {
             text-decoration: line-through;
-            opacity: 0.6;
+            color: #aaa;
         }
-
-        ul li a {
-            color: #333;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        ul li a:hover {
-            color: #28a745;
-        }
-
         .delete-btn {
             color: red;
-        }
-
-        .edit-btn {
-            color: #FFC107;
-        }
-
-        .complete-btn {
-            color: #28a745;
-            margin-right: 10px;
-        }
-
-        form {
-            background: #fff;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            max-width: 600px;
-            margin: 20px auto;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-        }
-
-        input[type="submit"] {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
-
-        input[type="submit"]:hover {
-            background-color: #218838;
+        .complete-btn {
+            color: green;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to My ToDo App</h1>
-    <ul>
-        <% todolist.forEach(function(todo, index) { %>
-        <li class="<%= todo.completed ? 'completed' : '' %>">
-            <div>
-                <%- todo.text %>
-            </div>
-            <div>
-                <a href="/todo/complete/<%= index %>" class="complete-btn">✔</a>
-                <a href="/todo/edit/<%= index %>" class="edit-btn">✎</a>
-                <a href="/todo/delete/<%= index %>" class="delete-btn">✘</a>
-            </div>
-        </li>
-        <% }); %>
-    </ul>
+    <div class="container">
+        <h1>ToDo List</h1>
+        <input type="text" id="newTodo" class="todo-input" placeholder="Add a new task...">
+        <ul id="todoList" class="todo-list"></ul>
+    </div>
 
-    <form action="/todo/add/" method="post">
-        <p>
-            <label for="newtodo">Add a New ToDo:</label>
-            <input type="text" name="newtodo" id="newtodo" autofocus />
-            <input type="submit" value="Add" />
-        </p>
-    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addTodoInput = document.getElementById('newTodo');
+            const todoList = document.getElementById('todoList');
+
+            addTodoInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && this.value.trim() !== '') {
+                    const newTodo = this.value.trim();
+                    addTodo(newTodo);
+                    this.value = '';
+                }
+            });
+
+            todoList.addEventListener('click', function(e) {
+                if (e.target.className === 'delete-btn') {
+                    e.target.parentElement.remove();
+                } else if (e.target.className === 'complete-btn') {
+                    e.target.parentElement.classList.toggle('completed');
+                }
+            });
+
+            function addTodo(todo) {
+                const li = document.createElement('li');
+                li.className = 'todo-item';
+                li.innerHTML = `
+                    <span>${todo}</span>
+                    <span>
+                        <span class="complete-btn">✔</span>
+                        <span class="delete-btn">✘</span>
+                    </span>`;
+                todoList.appendChild(li);
+            }
+        });
+    </script>
 </body>
 </html>
